@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Travel Recommender</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Premium Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </div>
+
+    <header class="app-header">
+        <div class="logo">
+            <i class="fa-solid fa-compass-drafting"></i>
+            <h1>Voyage<span>AI</span></h1>
+        </div>
+        <p class="subtitle">Intelligent Travel Recommendation System</p>
+    </header>
+
+    <main class="app-container">
+        <!-- Input Panel -->
+        <section class="panel input-panel glass">
+            <h2><i class="fa-solid fa-sliders"></i> Plan Your Journey</h2>
+            <form id="recommendation-form">
+                <!-- Basic Info -->
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="username">User Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="username" placeholder="Enter your name" required value="Guest">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="destination">Destination Province</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-map-pin"></i>
+                            <select id="destination" required>
+                                <option value="Ontario" selected>Ontario</option>
+                                <option value="British Columbia">British Columbia</option>
+                                <option value="Quebec">Quebec</option>
+                                <option value="Alberta">Alberta</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget & Dates -->
+                <div class="form-group row">
+                    <div class="col">
+                        <label>Budget Range ($)</label>
+                        <div class="range-container">
+                            <input type="number" id="budget-low" value="0" min="0" placeholder="Min">
+                            <span>to</span>
+                            <input type="number" id="budget-high" value="500" min="0" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label>Trip Dates</label>
+                        <div class="range-container">
+                            <input type="date" id="start-date" required>
+                            <span>to</span>
+                            <input type="date" id="end-date" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Preference Ratings -->
+                <div class="form-group category-group">
+                    <label class="section-label">Rate Attraction Categories (1 - 5)</label>
+                    <div class="category-ratings">
+                        <div class="cat-item">
+                            <span>Private & Custom Tours</span>
+                            <div class="stars" data-category="private_&_custom_tours">
+                                <i class="fa-star fa-solid" data-value="1"></i>
+                                <i class="fa-star fa-solid" data-value="2"></i>
+                                <i class="fa-star fa-solid" data-value="3"></i>
+                                <i class="fa-star fa-solid" data-value="4"></i>
+                                <i class="fa-star fa-solid" data-value="5"></i>
+                            </div>
+                        </div>
+                        <div class="cat-item">
+                            <span>Tours & Sightseeing</span>
+                            <div class="stars" data-category="tours_&_sightseeing">
+                                <i class="fa-star fa-solid" data-value="1"></i>
+                                <i class="fa-star fa-solid" data-value="2"></i>
+                                <i class="fa-star fa-solid" data-value="3"></i>
+                                <i class="fa-star fa-solid" data-value="4"></i>
+                                <i class="fa-star fa-solid" data-value="5"></i>
+                            </div>
+                        </div>
+                        <div class="cat-item">
+                            <span>Cultural & Theme Tours</span>
+                            <div class="stars" data-category="cultural_&_theme_tours">
+                                <i class="fa-star fa-solid" data-value="1"></i>
+                                <i class="fa-star fa-solid" data-value="2"></i>
+                                <i class="fa-star fa-solid" data-value="3"></i>
+                                <i class="fa-star fa-solid" data-value="4"></i>
+                                <i class="fa-star fa-solid" data-value="5"></i>
+                            </div>
+                        </div>
+                        <div class="cat-item">
+                            <span>Sightseeing Tickets & Passes</span>
+                            <div class="stars" data-category="sightseeing_tickets_&_passes">
+                                <i class="fa-star fa-solid" data-value="1"></i>
+                                <i class="fa-star fa-solid" data-value="2"></i>
+                                <i class="fa-star fa-solid" data-value="3"></i>
+                                <i class="fa-star fa-solid" data-value="4"></i>
+                                <i class="fa-star fa-solid" data-value="5"></i>
+                            </div>
+                        </div>
+                        <div class="cat-item">
+                            <span>Multi-Day & Extended Tours</span>
+                            <div class="stars" data-category="multi-day_&_extended_tours">
+                                <i class="fa-star fa-solid" data-value="1"></i>
+                                <i class="fa-star fa-solid" data-value="2"></i>
+                                <i class="fa-star fa-solid" data-value="3"></i>
+                                <i class="fa-star fa-solid" data-value="4"></i>
+                                <i class="fa-star fa-solid" data-value="5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hotel Amenity Preferences -->
+                <div class="form-group amenity-group">
+                    <label class="section-label">Preferred Hotel Amenities</label>
+                    <div class="amenity-chips">
+                        <button type="button" class="chip active" data-amenity=" Nonsmoking hotel">
+                            <i class="fa-solid fa-ban-smoking"></i> Nonsmoking
+                        </button>
+                        <button type="button" class="chip active" data-amenity=" Family Rooms">
+                            <i class="fa-solid fa-people-roof"></i> Family Rooms
+                        </button>
+                        <button type="button" class="chip active" data-amenity=" Public Wifi">
+                            <i class="fa-solid fa-wifi"></i> Free Wifi
+                        </button>
+                        <button type="button" class="chip" data-amenity=" Pets Allowed  Dog  Pet Friendly ">
+                            <i class="fa-solid fa-paw"></i> Pet Friendly
+                        </button>
+                        <button type="button" class="chip active" data-amenity=" Air conditioning">
+                            <i class="fa-solid fa-snowflake"></i> Air Conditioning
+                        </button>
+                        <button type="button" class="chip" data-amenity=" Bar  Lounge">
+                            <i class="fa-solid fa-glass-martini-alt"></i> Bar / Lounge
+                        </button>
+                        <button type="button" class="chip" data-amenity=" Fitness Center with Gym  Workout Room">
+                            <i class="fa-solid fa-dumbbell"></i> Gym
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <span>Generate Travel Plan</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- Output Panel -->
+        <section class="panel output-panel-results">
+            <!-- Tabs -->
+            <div class="tab-control">
+                <button class="tab-btn active" data-tab="itinerary"><i class="fa-solid fa-calendar-days"></i> Attractions Itinerary</button>
+                <button class="tab-btn" data-tab="hotels"><i class="fa-solid fa-hotel"></i> Hotel Matches</button>
+            </div>
+
+            <!-- Loader -->
+            <div class="loader-container" id="results-loader" style="display: none;">
+                <div class="spinner"></div>
+                <p>VoyageAI is calculating recommendations...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="results-empty">
+                <i class="fa-solid fa-earth-americas"></i>
+                <h3>Your Adventure Awaits</h3>
+                <p>Fill out the form and generate your personalized travel plan.</p>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tab-content active" id="tab-itinerary" style="display: none;">
+                <div class="itinerary-days" id="itinerary-days-container">
+                    <!-- Dynamic Days -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-hotels" style="display: none;">
+                <div class="hotels-grid" id="hotels-container">
+                    <!-- Dynamic Hotels -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 VoyageAI Travel Recommendation Engine</p>
+    </footer>
+
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>
