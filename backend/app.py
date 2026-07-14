@@ -1,5 +1,9 @@
 import sys
 import os
+
+# Set current working directory to project root (one level up from this script)
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import datetime as dt
 import pandas as pd
 from flask import Flask, request, jsonify, send_from_directory
@@ -11,7 +15,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from attractions_recc import get_recc, filter_df, find_closest, top_recc
 from hotel_recc import amenities_rating, model_train, get_hotel_recc, load_spark_json, get_image
 
-app = Flask(__name__, static_folder='../frontend')
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend'))
 CORS(app)
 
 # Load data on startup
@@ -25,9 +29,7 @@ def index():
 
 @app.route('/downloads/<path:filename>')
 def serve_downloads(filename):
-    downloads_dir = os.path.join(os.getcwd(), 'downloads')
-    if not os.path.exists(downloads_dir):
-        downloads_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'downloads')
+    downloads_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'downloads')
     return send_from_directory(downloads_dir, filename)
 
 @app.route('/<path:path>')
