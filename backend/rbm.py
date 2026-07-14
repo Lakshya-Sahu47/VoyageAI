@@ -78,9 +78,11 @@ class RBM(object):
             elif i % 10 == 9:
                 print("Error after {0} epochs is: {1}".format(i+1, self.errors[i]))
 
-        if not os.path.exists('models/rbm_models'):
-            os.makedirs('models/rbm_models', exist_ok=True)
-        filename = 'models/rbm_models/'+filename
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        models_dir = os.path.join(base_dir, 'models', 'rbm_models')
+        if not os.path.exists(models_dir):
+            os.makedirs(models_dir, exist_ok=True)
+        filename = os.path.join(models_dir, filename)
         if not os.path.exists(filename):
             os.mkdir(filename)
         np.save(filename+'/w.npy', prv_w)
@@ -100,9 +102,11 @@ class RBM(object):
         return rec, prv_w, prv_vb, prv_hb
 
     def load_predict(self, filename, train, user):
-        prv_w = np.load('models/rbm_models/'+filename+'/w.npy')
-        prv_vb = np.load('models/rbm_models/'+filename+'/vb.npy')
-        prv_hb = np.load('models/rbm_models/'+filename+'/hb.npy')
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        models_dir = os.path.join(base_dir, 'models', 'rbm_models')
+        prv_w = np.load(os.path.join(models_dir, filename, 'w.npy'))
+        prv_vb = np.load(os.path.join(models_dir, filename, 'vb.npy'))
+        prv_hb = np.load(os.path.join(models_dir, filename, 'hb.npy'))
         
         print("Model restored from " + filename)
         

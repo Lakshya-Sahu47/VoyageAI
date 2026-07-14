@@ -97,7 +97,8 @@ def model_train(usr_rating):
     Matrix Factorization collaborative filtering training using NumPy SimpleMF
     '''
     # Read ratings data from data/etl/u_id_df (previously project/u_id_df or etl/u_id_df)
-    u_id_df = load_spark_json('data/etl/u_id_df')
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    u_id_df = load_spark_json(os.path.join(base_dir, 'data/etl/u_id_df'))
     uid_count = u_id_df['user_id'].nunique()
 
     temp_usr = usr_rating[['id', 'rating']].rename(columns={'rating': 'user_rating'})
@@ -140,8 +141,10 @@ def model_train(usr_rating):
             best_rank = r
             best_model = model
             
-    os.makedirs('models/mf_models/model_file', exist_ok=True)
-    with open('models/mf_models/model_file/mf_model.pkl', 'wb') as f:
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_file_dir = os.path.join(base_dir, 'models', 'mf_models', 'model_file')
+    os.makedirs(model_file_dir, exist_ok=True)
+    with open(os.path.join(model_file_dir, 'mf_model.pkl'), 'wb') as f:
         pickle.dump(best_model, f)
         
     return best_rank, best_error, errors, usrid_s2
@@ -150,11 +153,13 @@ def get_hotel_recc(usrid_s2):
     '''
     Load best SimpleMF model and make recommendations
     '''
-    with open('models/mf_models/model_file/mf_model.pkl', 'rb') as f:
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_file_dir = os.path.join(base_dir, 'models', 'mf_models', 'model_file')
+    with open(os.path.join(model_file_dir, 'mf_model.pkl'), 'rb') as f:
         model = pickle.load(f)
 
     user_ids = usrid_s2['user_id'].unique()
-    u_id_df = load_spark_json('data/etl/u_id_df')
+    u_id_df = load_spark_json(os.path.join(base_dir, 'data/etl/u_id_df'))
     all_hotel_ids = u_id_df['att_id'].unique()
 
     recs_list = []

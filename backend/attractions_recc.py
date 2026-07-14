@@ -43,7 +43,8 @@ def get_recc(att_df, cat_rating):
     alpha = 0.01
     H = 128
     batch_size = 8
-    dir = 'data/etl/'
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    dir = os.path.join(base_dir, 'data', 'etl', '')
     ratings, attractions = util.read_data(dir)
     ratings = util.clean_subset(ratings, rows)
     rbm_att, train = util.preprocess(ratings)
@@ -70,16 +71,20 @@ def get_recc(att_df, cat_rating):
         print("Pre-trained model not found, training on the fly...")
         reco, weights, vb, hb = rbm.training(train, None, user, epochs, batch_size, False, False, filename)
     unseen, seen = rbm.calculate_scores(ratings, attractions, reco, user, rbm_att)
-    rbm.export(unseen, seen, 'models/rbm_models/'+filename, str(user))
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    models_dir = os.path.join(base_dir, 'models', 'rbm_models')
+    rbm.export(unseen, seen, os.path.join(models_dir, filename), str(user))
     return filename, user, rbm_att
 
 def filter_df(filename, user, low, high, province, att_df):
-    recc_df = pd.read_csv('models/rbm_models/'+filename+'/user{u}_unseen.csv'.format(u=user), index_col=0)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    models_dir = os.path.join(base_dir, 'models', 'rbm_models')
+    recc_df = pd.read_csv(os.path.join(models_dir, filename, 'user{u}_unseen.csv'.format(u=user)), index_col=0)
     recc_df.columns = ['attraction_id', 'att_name', 'att_cat', 'att_price', 'score']
     recommendation = att_df[['attraction_id','name','category','city','latitude','longitude','price','province', 'rating']].set_index('attraction_id').join(recc_df[['attraction_id','score']].set_index('attraction_id'), how="inner").reset_index().sort_values("score",ascending=False)
     
     filtered = recommendation[(recommendation.province == province) & (recommendation.price >= low) & (recommendation.price <= high)]
-    url = pd.read_json('data/outputs/attractions_cat.json',orient='records')
+    url = pd.read_json(os.path.join(base_dir, 'data/outputs/attractions_cat.json'),orient='records')
     url['id'] = url.index
     with_url = filtered.set_index('attraction_id').join(url[['id','attraction']].set_index('id'), how="inner")
     return with_url

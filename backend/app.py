@@ -1,9 +1,5 @@
 import sys
 import os
-
-# Set current working directory to project root (one level up from this script)
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import datetime as dt
 import pandas as pd
 from flask import Flask, request, jsonify, send_from_directory
@@ -15,13 +11,15 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from attractions_recc import get_recc, filter_df, find_closest, top_recc
 from hotel_recc import amenities_rating, model_train, get_hotel_recc, load_spark_json, get_image
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend'))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+app = Flask(__name__, static_folder=os.path.join(BASE_DIR, 'frontend'))
 CORS(app)
 
 # Load data on startup
-att_df = pd.read_json('data/etl/attractions.json', orient='records')
-del_dup = load_spark_json('data/etl/del_dup')
-newh_df = load_spark_json('data/etl/newh_df')
+att_df = pd.read_json(os.path.join(BASE_DIR, 'data/etl/attractions.json'), orient='records')
+del_dup = load_spark_json(os.path.join(BASE_DIR, 'data/etl/del_dup'))
+newh_df = load_spark_json(os.path.join(BASE_DIR, 'data/etl/newh_df'))
 
 @app.route('/')
 def index():
