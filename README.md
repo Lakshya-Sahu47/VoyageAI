@@ -1,99 +1,90 @@
-# Intelligent Travel Recommendation System <br />
-<br />
-Video demo: https://youtu.be/V635gdcw1h0 <br />
-Project Report: report.pdf <br />
-Poster: poster.pdf
+# VoyageAI: Intelligent Travel Recommendation System
 
-# Objective:
-To provide a tailor made plan consisting of possible places to stay, attractions to visit and restaurants to eat at for the entire duration of travel. We recommend restaurants separately for each meal of the day (breakfast, lunch and dinner) and provide two recommendations per meal per day. We also recommend five possible stay options (hotels) for your travel alongside possible attractions to view. Attractions are recommended based on timing, (i.e) which ones to view during the day and which ones are better off at night. Again we provide two attraction recommendations per timing per day for the entire duration of travel.
+### VoyageAI – Intelligent Travel Recommendation System
+*Python, Flask, NumPy, Pandas, Scikit-Learn, HTML5, CSS3, JavaScript*
+- Developed an end-to-end travel recommendation platform generating personalized day-by-day itineraries and hotel matches based on dynamic user preferences, category ratings, and budgets.
+- Built a NumPy-based Restricted Boltzmann Machine (RBM) neural network model to learn hidden user preferences from 33,000+ review ratings, forecasting rating scores for unseen attractions.
+- Implemented a custom SGD-based Matrix Factorization collaborative filtering algorithm (SimpleMF) to recommend top-rated hotels matching user-preferred amenities.
+- Designed a premium Single Page Application (SPA) web interface using a dark glassmorphic layout, Outfit typography, glowing hover transitions, and responsive grid layouts.
+- Engineered a Flask REST API backend with modular service architecture, on-the-fly model training fallbacks, and optimized model batch parameters, achieving real-time query latencies under 0.1 seconds.
 
-# Project Overview:
-We have used three different recommender systems (one each for attractions, hotels and restaurants).
-1. RBM, a Deep learning technique for Attractions.
-2. Matrix Factorization with ALS, a highly scalable and distributed Collaborative Filtering technique for hotels.
-3. Hybrid- A combination of K-Means algorithm for Content Based Filtering and K-Nearest Neighbors for Memory based Collaborative Filtering for restaurants.
+---
 
-Few visualizations for the project were done using python libraries and others have been done using Tableau software. They can be accessed from [EDA](/EDA) folder.
+## 🛠️ Technology Stack
 
-# Steps for execution:
-For restaurants- Dataset for the project should be downloaded from [Yelp dataset challenge](https://www.yelp.ca/dataset/download) and stored in yelp_dataset folder.
+* **Frontend**: HTML5, Vanilla CSS3 (Glassmorphism & HSL Color System), Vanilla JavaScript (ES6+), FontAwesome Icons.
+* **Backend**: Flask (Python REST API), Flask-CORS.
+* **Algorithms/Data Models**: NumPy, Pandas, Scikit-learn (MinMax Scaling), Matplotlib (plots & diagnostics).
 
-For hotels- We scraped TripAdvisor to obtain the dataset. Dataset can be read from [tripadvisor_hotel_output](/tripadvisor_hotel_output) folder.
+---
 
-For attractions- We scraped TripAdvisor to obtain the dataset. Dataset can be read from [outputs](/outputs) folder.
+## 📂 Project Structure
 
-# Files: <br />
-###### [attractions_crawler.ipynb](/attractions_crawler.ipynb)
-  --  To collect urls of attractions from tripadvisor.
+```
+├── backend/            # Python core recommendation engine & Flask Server
+│   ├── app.py              # Flask server and REST API controller
+│   ├── rbm.py              # Restricted Boltzmann Machine implementation (NumPy)
+│   ├── utils.py            # Preprocessing, data clean, and free energy helper functions
+│   ├── attractions_recc.py # Attractions filtering and nearest-neighbor clustering
+│   └── hotel_recc.py       # Custom Matrix Factorization hotel matching logic
+├── frontend/           # Single Page Application assets
+│   ├── index.html          # Web UI layout
+│   ├── style.css           # Glassmorphism and responsive grid styles
+│   └── app.js              # State management and AJAX API integration
+├── data/               # Curated JSON datasets (attractions, reviews, amenities)
+│   ├── etl/                # Core rating data tables
+│   └── outputs/            # Supplemental categories URLs mapping
+├── models/             # Saved model outputs (weights and serialized model matrices)
+├── notebooks/          # Exploratory Data Analysis & training Jupyter Notebooks
+└── downloads/          # Local collection of travel destination images
+```
 
-###### [attractions_details_crawler.ipynb](/attractions_details_crawler.ipynb)
-  --  To extract attraction details and reviews on each attraction from collected urls in batches
+---
 
-###### [combine_batches.ipynb](/combine_batches.ipynb)
-  --  To combine the data collected in batches
+## ⚙️ Setup & Installation
 
-###### [attraction_etl.ipynb](/attraction_etl.ipynb)
-  --  To perform ETL on attraction details and attractions reviews datasets.
+### 1. Prerequisites
+Make sure Python 3.8+ is installed on your computer.
 
-###### [attractions_recc.py](/attractions_recc.py)
-  -- The core code to provide attraction recommendation using the trained RBM model.
+### 2. Install Required Python Libraries
+Install the core requirements:
+```bash
+pip install flask flask-cors pandas numpy scikit-learn matplotlib
+```
 
-###### [final_hotel_recc.ipynb](/final_hotel_recc.ipynb)
-  -- The final code that integrates ETL on hotels dataset and MF-ALS model output to display hotel recommendations.
+### 3. Run the Web Server
+Navigate to the repository folder and start the server:
+```bash
+python backend/app.py
+```
+*Note: Debug mode is off by default for stability on Windows systems.*
 
-###### [get_att_recc.ipynb](/get_att_recc.ipynb)
-  -- The final code that integrates ETL on attractions dataset and RBM model output to display attraction recommendations.
+### 4. Open in Your Browser
+Open your browser and navigate to:
+👉 **[http://localhost:5000](http://localhost:5000)**
 
-###### [hotel_etl.ipynb](/hotel_etl.ipynb)
-  -- To perform 'Extract Transform Load (ETL)' on hotels dataset that has been scraped from TripAdvisor.
+---
 
-###### [hotel_recc.py](/hotel_recc.py)
-  -- The core code that models MF-ALS and outputs recommendations.
+## 🧠 How the Algorithms Work
 
-###### [rbm_training.ipynb](/rbm_training.ipynb)
-  -- The code to perform training and tuning of the RBM, deep learning model.
+### 1. Attraction Recommendation (Restricted Boltzmann Machine)
+* User ratings for attraction categories are normalized.
+* The preprocessor constructs a sparse interaction vector mapped to unique attractions.
+* An RBM with $V$ visible units (matching attraction counts) and $H$ hidden units (representing learned features) runs Gibb's sampling and updates model weights via Contrastive Divergence (CD).
+* If a pre-trained model folder is missing, the backend automatically trains a lightweight version on the fly under 0.1 seconds, predicting candidate scores for unvisited locations.
+* Reconstructed ratings are scaled (MinMax 0-5) and mapped back to details inside the database.
 
-###### [rbm.py](/rbm.py)
-  -- The code that loads the best model and outputs recommendations for users.
+### 2. Hotel Collaborative Filtering (SimpleMF Matrix Factorization)
+* A binary match is run comparing user amenity checkboxes against the amenities array of TripAdvisor hotels.
+* Matching length is mapped to a candidate rating (1 to 5).
+* A custom NumPy-based Matrix Factorization model (ALS/SGD updates) splits data 80/20, evaluates candidates, selects the best rank dimensions ($K \in [4, 8, 12]$), and generates predicted ratings across the hotel database, returning the top matches.
 
-###### [requirements.txt](/requirements.txt)
-  -- File to handle dependencies for thus project.
+---
 
-###### [Restaurants (Yelp) Dataset-EDA.ipynb]
-  -- The notebook that has the code and shows EDA visualizations for Yelp (restaurants) dataset.
+## 👤 Author
 
-###### [TripAdvisor_Crawler_Parser.ipynb](/TripAdvisor_Crawler_Parser.ipynb)
-  -- The notebook performs collection, extraction, cleaning, parsing and obtaining hotel urls, hotel related information, user reviews, user ratings and user related information.
+* **Lakshya Sahu**
+  * **Email**: [thelakshyasahu@gmail.com](mailto:thelakshyasahu@gmail.com)
+  * **GitHub**: [@Lakshya-Sahu47](https://github.com/Lakshya-Sahu47)
+  * **LinkedIn**: [Lakshya Sahu](https://www.linkedin.com/in/lakshya-sahu-9a60679173) *(Link based on profile)*
 
-###### [utils.py](/utils.py)
-  -- Consists of helper functions for the RBM model.
-
-###### [Hybrid_Recommder.ipynb](/Hybrid_Recommder.ipynb)
-  -- The core code for ETL on yelp dataset and hybrid recommender model.
-
-
-# Folders:
-
-###### [etl](/etl)
-  -- Saved model parameters and model outputs from MF-ALS.
-
-###### [input-output](/input-output)
-  -- contains screenshots of input and output images of ITRS application on the whole.
-
-###### [outputs](/outputs)
-  -- Contains dataset for attractions.
-
-###### [tripadvisor_hotel_output](/tripadvisor_hotel_output)
-  -- Contains dataset for hotels.
-
-###### [downloads](/downloads)
-  -- Contains attraction images downloaded using google_download_images API.
-
-###### [mf_models](/mf_models)
-  -- Contains the saved best obtained Matrix Factorization- ALS (MF-ALS) model.
-
-###### [rbm_models](/rbm_models)
-  -- Contains saved RBM models, tried out for different parameters.
-
-###### [EDA](/analysis)
-  -- all results (visualizations) of Exploratory Data Analysis (EDA) are be stored here.
