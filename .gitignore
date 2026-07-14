@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+
+# Large model binary outputs (weights are generated/loaded dynamically)
+models/rbm_models/*
+models/mf_models/*
+!models/rbm_models/.gitkeep
+!models/mf_models/.gitkeep
+
+# Exclude git batch commit utility
+git_batch_commit.py
