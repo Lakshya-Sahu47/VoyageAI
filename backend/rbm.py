@@ -6,7 +6,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import os
 from sklearn import preprocessing
-from IPython.display import display
+# Lazy-loaded IPython display in methods
 
 class RBM(object):
     '''
@@ -171,7 +171,11 @@ class RBM(object):
         
         # Display the head of the unseen scores for jupyter notebook visualization
         grouped_unseen = unseen_places[['att_id', 'score']].rename(columns={'att_id': 'attraction_id', 'score': 'Recommendation Score'})
-        display(grouped_unseen.head())
+        try:
+            from IPython.display import display
+            display(grouped_unseen.head())
+        except ImportError:
+            print(grouped_unseen.head().to_string())
         
         return unseen_places, seen_places
 
