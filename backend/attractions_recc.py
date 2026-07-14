@@ -1,9 +1,5 @@
 import pandas as pd
 import numpy as np
-import ipywidgets as w
-from ipywidgets import HBox, VBox
-from ipywidgets import Layout, widgets
-from IPython.display import display, IFrame, HTML
 from utils import Util
 from rbm import RBM
 import math, re, datetime as dt, glob, os
@@ -143,6 +139,10 @@ def find_closest(with_url, loc, tod, final):
     return final
 
 def final_output(days, final):
+    import ipywidgets as w
+    from ipywidgets import HBox, VBox, Layout, widgets
+    from IPython.display import display, IFrame, HTML
+
     time = ['MORNING', 'EVENING']
     fields = ['NAME', 'CATEGORY', 'LOCATION', 'PRICE', 'RATING']
     recommendations = ['Recommendation 1:', 'Recommendation 2:']

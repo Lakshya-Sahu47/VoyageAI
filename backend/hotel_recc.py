@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import ipywidgets as w
-from IPython.display import display, IFrame
 import math, re, glob, os
 import pickle
 
@@ -199,6 +197,9 @@ def get_image(name):
     return None
         
 def get_hotel_output(days, final):
+    import ipywidgets as w
+    from IPython.display import display, IFrame
+
     fields = ['NAME', 'PRICE', 'RATING', 'EXPERIENCE','LOCATION', 'ADDRESS', "AMENITIES"]
     recommendations = ['Recommendation']
 
